@@ -1,0 +1,31 @@
+{
+  "name": "pulumi-k8s-guestbook-monitoring",
+  "version": "1.0.0",
+  "description": "Kubernetes Guestbook application with Prometheus and Grafana monitoring using Pulumi",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node index.js",
+    "dev": "ts-node index.ts"
+  },
+  "dependencies": {
+    "@pulumi/pulumi": "^3.0.0",
+    "@pulumi/kubernetes": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.0.0"
+  },
+  "keywords": [
+    "pulumi",
+    "kubernetes",
+    "prometheus",
+    "grafana",
+    "monitoring",
+    "sre",
+    "guestbook"
+  ],
+  "author": "4IR Solutions Candidate",
+  "license": "MIT"
+}

@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Pulumi state
+.pulumi/
+
+# Build artifacts
+*.js.map
+dist/
+
+# OS
+.DS_Store
+**/*Zone.Identifier
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp
+temp/

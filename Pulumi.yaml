@@ -1,0 +1,11 @@
+name: pulumi-k8s-guestbook-monitoring
+runtime:
+  name: nodejs
+  options:
+    typescript: true
+description: Kubernetes Guestbook application with Prometheus and Grafana monitoring
+template:
+  description: A Pulumi program to deploy the Kubernetes Guestbook application with monitoring
+  config:
+    kubernetes:
+      description: The Kubernetes provider configuration

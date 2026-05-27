@@ -1,0 +1,199 @@
+{
+  "id": null,
+  "title": "Guestbook Application Monitoring",
+  "tags": ["guestbook", "kubernetes"],
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Pod CPU Usage",
+      "type": "timeseries",
+      "targets": [{
+        "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"guestbook\", pod=~\".+\"}[5m])) by (pod)",
+        "refId": "A",
+        "legendFormat": "{{pod}}"
+      }],
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "short" } }
+    },
+    {
+      "id": 2,
+      "title": "Pod Memory Usage",
+      "type": "timeseries",
+      "targets": [{
+        "expr": "sum(container_memory_working_set_bytes{namespace=\"guestbook\", pod=~\".+\"}) by (pod)",
+        "refId": "A",
+        "legendFormat": "{{pod}}"
+      }],
+      "gridPos": { "h": 8, "w": 7, "x": 6, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "id": 7,
+      "title": "Apache Requests per Second",
+      "type": "stat",
+      "targets": [{
+        "expr": "sum(rate(apache_accesses_total{kubernetes_namespace=\"guestbook\"}[5m]))",
+        "refId": "A",
+        "legendFormat": "Requests/sec"
+      }],
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 10 },
+              { "color": "red", "value": 50 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 8,
+      "title": "Apache Total Requests",
+      "type": "stat",
+      "targets": [{
+        "expr": "sum(apache_accesses_total{kubernetes_namespace=\"guestbook\"})",
+        "refId": "A",
+        "legendFormat": "Total"
+      }],
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "short" } }
+    },
+    {
+      "id": 9,
+      "title": "Apache Worker Status",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "apache_scoreboard{kubernetes_namespace=\"guestbook\", state=\"busy\"}",
+          "refId": "A",
+          "legendFormat": "{{kubernetes_pod_name}} - Busy Workers"
+        },
+        {
+          "expr": "apache_scoreboard{kubernetes_namespace=\"guestbook\", state=\"idle\"}",
+          "refId": "B",
+          "legendFormat": "{{kubernetes_pod_name}} - Idle Workers"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 7, "x": 13, "y": 0 },
+      "fieldConfig": {
+        "defaults": { 
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none"
+          }
+        }
+      }
+    },
+    {
+      "id": 10,
+      "title": "Redis Connected Clients",
+      "type": "stat",
+      "targets": [{
+        "expr": "sum(redis_connected_clients{kubernetes_namespace=\"guestbook\"})",
+        "refId": "A",
+        "legendFormat": "Connected Clients"
+      }],
+      "gridPos": { "h": 10, "w": 4, "x": 0, "y": 16 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 10 },
+              { "color": "red", "value": 50 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 11,
+      "title": "Redis Memory Usage",
+      "type": "timeseries",
+      "targets": [{
+        "expr": "redis_memory_used_bytes{kubernetes_namespace=\"guestbook\"}",
+        "refId": "A",
+        "legendFormat": "{{instance}} - Memory Used"
+      }],
+      "gridPos": { "h": 10, "w": 7, "x": 4, "y": 16 },
+      "fieldConfig": { "defaults": { "unit": "bytes" } }
+    },
+    {
+      "id": 12,
+      "title": "Redis Operations per Second",
+      "type": "timeseries",
+      "targets": [{
+        "expr": "rate(redis_commands_processed_total{kubernetes_namespace=\"guestbook\"}[5m])",
+        "refId": "A",
+        "legendFormat": "{{kubernetes_pod_name}} - Commands/sec"
+      }],
+      "gridPos": { "h": 8, "w": 8, "x": 12, "y": 8 },
+      "fieldConfig": {
+        "defaults": { 
+          "unit": "ops",
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none"
+          }
+        }
+      }
+    },
+    {
+      "id": 13,
+      "title": "Redis Keyspace Hit Rate",
+      "type": "stat",
+      "targets": [{
+        "expr": "rate(redis_keyspace_hits_total{kubernetes_namespace=\"guestbook\"}[5m]) / (rate(redis_keyspace_hits_total{kubernetes_namespace=\"guestbook\"}[5m]) + rate(redis_keyspace_misses_total{kubernetes_namespace=\"guestbook\"}[5m])) * 100",
+        "refId": "A",
+        "legendFormat": "{{kubernetes_pod_name}} ({{role}}) Hit Rate %"
+      }],
+      "gridPos": { "h": 10, "w": 9, "x": 11, "y": 16 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 80 },
+              { "color": "green", "value": 95 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 14,
+      "title": "Redis Connections",
+      "type": "timeseries",
+      "targets": [{
+        "expr": "redis_connected_clients{kubernetes_namespace=\"guestbook\"}",
+        "refId": "A",
+        "legendFormat": "{{instance}} - {{role}} - Connected Clients"
+      }],
+      "gridPos": { "h": 7, "w": 20, "x": 0, "y": 26 },
+      "fieldConfig": {
+        "defaults": { 
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none"
+          }
+        }
+      }
+    }
+  ]
+}
