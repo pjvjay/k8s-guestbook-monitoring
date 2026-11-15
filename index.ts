@@ -70,7 +70,7 @@ const frontend = new k8sjs.ServiceDeployment("frontend", {
 // Monitoring Stack - kube-prometheus-stack with custom scraping for our sidecars
 const monitoring = new k8sjs.MonitoringStack("monitoring", {
     namespace: monitoringNamespace.metadata.name,
-    adminPassword: "admin123"
+    adminPassword: "temptestpass"
 });
 
 // Exports
@@ -84,7 +84,7 @@ export const grafanaUrl = pulumi.output("http://localhost:3000");
 
 export const grafanaCredentials = {
     username: "admin",
-    password: "admin123"
+    password: "temptestpass"
 };
 
 export const namespaces = {
